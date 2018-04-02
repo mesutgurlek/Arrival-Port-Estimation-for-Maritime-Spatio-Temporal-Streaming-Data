@@ -101,8 +101,11 @@ ENV/
 # mypy
 .mypy_cache/
 
-#Dataset
+# Dataset
 /Dataset
 
-#Macos
+# Macos
 .DS_Store
+
+# Pycharm
+.idea/
