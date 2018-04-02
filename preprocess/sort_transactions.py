@@ -1,6 +1,6 @@
 import csv
 
-filename = 'debs2018_training_labeled.csv'
+filename = '..' # TODO: WRITE FILENAME TO RUN
 
 data = []
 # read data
