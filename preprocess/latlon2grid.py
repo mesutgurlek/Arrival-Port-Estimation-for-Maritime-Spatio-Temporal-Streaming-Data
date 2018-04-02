@@ -38,7 +38,7 @@ def toGrid(dec_lat, dec_lon):
     return grid_lon_sq + grid_lat_sq + grid_lon_field + grid_lat_field + grid_lon_subsq + grid_lat_subsq
 
 
-coordinates = pd.read_csv('../Dataset/debs2018_training_labeled.csv')
+coordinates = pd.read_csv('../Dataset/training_data.csv')
 
 LATs = coordinates['LAT']
 LONs = coordinates['LON']
