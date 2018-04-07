@@ -14,8 +14,9 @@ from sklearn.metrics import mean_squared_error
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.layers import LSTM
+import math
 
-dataset_path  = 'Dataset/preprocess_outputs/port_calc_processed.csv'
+dataset_path  = 'Dataset/preprocess_outputs/arrival_calc_processed.csv'
 
 def series_to_supervised(data, n_in=1, n_out=1, dropnan=True):
 	n_vars = 1 if type(data) is list else data.shape[1]
@@ -50,15 +51,15 @@ if __name__ == "__main__":
     values[:, 6] = encoder.fit_transform(values[:, 6])
     values[:, 5] = encoder.fit_transform(values[:, 5])
     # ensure all data is float
-    #values = values.astype('float32')
+    values = values.astype('float32')
     # normalize features
     scaler = MinMaxScaler(feature_range=(0, 1))
-    scaled = scaler.fit_transform(values[:,[0,1,2,3,4,5]])
+    scaled = scaler.fit_transform(values)
     # frame as supervised learning
     #reframed = series_to_supervised(scaled, 1, 1)
 
     #values = reframed.values
-    values[:,[0,1,2,3,4,5]] = scaled
+    values = scaled
     train = values[:80*(len(values)/100), :]
     test = values[80*(len(values)/100):, :]
     # split into input and outputs
@@ -70,13 +71,11 @@ if __name__ == "__main__":
     print(train_X.shape, train_y.shape, test_X.shape, test_y.shape)
 
     model = Sequential()
-
-    model = Sequential()
     model.add(LSTM(50, input_shape=(train_X.shape[1], train_X.shape[2])))
     model.add(Dense(1))
     model.compile(loss='mean_squared_error', optimizer='adam')
     # fit network
-    history = model.fit(train_X, train_y, epochs=10, batch_size=72, validation_data=(test_X, test_y), verbose=2, shuffle=False)
+    history = model.fit(train_X, train_y, epochs=200, batch_size=72, validation_data=(test_X, test_y), verbose=2, shuffle=False)
     # plot history
     pyplot.plot(history.history['loss'], label='train') 
     pyplot.plot(history.history['val_loss'], label='test')
@@ -84,4 +83,5 @@ if __name__ == "__main__":
     pyplot.show()
 
     # make a prediction
-    yhat = model.predict(test_X)
+    testScore = model.evaluate(test_X, test_y, verbose=0)
+    print('Test Score: %.2f MSE (%.2f RMSE)' % (testScore, math.sqrt(testScore)))
