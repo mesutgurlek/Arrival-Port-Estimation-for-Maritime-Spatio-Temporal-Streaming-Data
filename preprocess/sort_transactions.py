@@ -32,9 +32,9 @@ with open('sorted_' + filename, 'wb') as csvfile:
 def isSorted(data):
     for i in range(len(data) - 1):
         if data[i][0] == data[i + 1][0] and (not data[i][7] < data[i + 1][7]):
-            print i
-            print data[i][0], data[i + 1][0]
-            print data[i][7], data[i + 1][7] # should be numerical
+            print(i)
+            print(data[i][0], data[i + 1][0])
+            print(data[i][7], data[i + 1][7]) # should be numerical
             return False
     return True
         
