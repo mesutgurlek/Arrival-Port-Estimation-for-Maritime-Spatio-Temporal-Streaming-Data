@@ -53,12 +53,12 @@ if __name__ == "__main__":
     values = values.astype('float32')
     # normalize features
     scaler = MinMaxScaler(feature_range=(0, 1))
-    scaled = scaler.fit_transform(values)
+    scaled = scaler.fit_transform(values[:,[0,1,2,3,4,5]])
     # frame as supervised learning
     #reframed = series_to_supervised(scaled, 1, 1)
 
     #values = reframed.values
-    values = scaled
+    values[:,[0,1,2,3,4,5]] = scaled
     train = values[:80*(len(values)/100), :]
     test = values[80*(len(values)/100):, :]
     # split into input and outputs
@@ -83,6 +83,7 @@ if __name__ == "__main__":
 
     # make a prediction
     yhat = model.predict(test_X)
+    '''
     test_X = test_X.reshape((test_X.shape[0], test_X.shape[2]))
     # invert scaling for forecast
     inv_yhat = concatenate((yhat, test_X[:, 1:]), axis=1)
@@ -96,3 +97,4 @@ if __name__ == "__main__":
     # calculate RMSE
     rmse = sqrt(mean_squared_error(inv_y, inv_yhat))
     print('Test RMSE: %.3f' % rmse)
+    '''
