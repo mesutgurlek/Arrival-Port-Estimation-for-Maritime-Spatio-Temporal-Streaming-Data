@@ -48,4 +48,4 @@ coordinateList = []
 for i in range(LATs.size):
     coordinateList.append(toGrid(LATs[i], LONs[i]))
 
-print coordinateList
+print(coordinateList)
