@@ -19,7 +19,7 @@ def parse(timestamp):
 
     return date
 
-dataset_path  = '../Dataset/training_dataset.csv'
+dataset_path  = '../Dataset/training_dataset.csv' ## apply on transactional_labeled.csv
 df = read_csv(dataset_path,  parse_dates = ['TIMESTAMP'], index_col=False, date_parser=parse)
 df.drop('SHIPTYPE', axis=1, inplace=True)
 #df.drop('ARRIVAL_PORT_CALC', axis=1, inplace=True)
