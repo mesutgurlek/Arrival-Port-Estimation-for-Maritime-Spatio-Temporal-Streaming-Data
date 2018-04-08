@@ -31,13 +31,14 @@ if __name__ == "__main__":
     # accuracy on X_test
     accuracyKNN = knn.score(X_test, y_test)
     print(accuracyKNN)
+
     # -----------------------------------------------------
-    from sklearn.svm import SVC
-    svm_model_linear = SVC(kernel='linear', C=1).fit(X_train, y_train)
-    svm_predictions = svm_model_linear.predict(X_test)
-    # model accuracy for X_test
-    accuracySVM = svm_model_linear.score(X_test, y_test)
-    print(accuracySVM)
+    # from sklearn.svm import SVC
+    # svm_model_linear = SVC(kernel='linear', C=1).fit(X_train, y_train)
+    # svm_predictions = svm_model_linear.predict(X_test)
+    # # model accuracy for X_test
+    # accuracySVM = svm_model_linear.score(X_test, y_test)
+    # print(accuracySVM)
 
     # -----------------------------------------------------
 

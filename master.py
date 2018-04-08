@@ -16,33 +16,34 @@ from keras.layers import Dense
 from keras.layers import LSTM
 import math
 
-dataset_path  = 'Dataset/preprocess_outputs/arrival_calc_processed.csv'
+dataset_path = 'Dataset/preprocess_outputs/arrival_calc_processed.csv'
+
 
 def series_to_supervised(data, n_in=1, n_out=1, dropnan=True):
-	n_vars = 1 if type(data) is list else data.shape[1]
-	df = DataFrame(data)
-	cols, names = list(), list()
-	# input sequence (t-n, ... t-1)
-	for i in range(n_in, 0, -1):
-		cols.append(df.shift(i))
-		names += [('var%d(t-%d)' % (j+1, i)) for j in range(n_vars)]
-	# forecast sequence (t, t+1, ... t+n)
-	for i in range(0, n_out):
-		cols.append(df.shift(-i))
-		if i == 0:
-			names += [('var%d(t)' % (j+1)) for j in range(n_vars)]
-		else:
-			names += [('var%d(t+%d)' % (j+1, i)) for j in range(n_vars)]
-	# put it all together
-	agg = concat(cols, axis=1)
-	agg.columns = names
-	# drop rows with NaN values
-	if dropnan:
-		agg.dropna(inplace=True)
-	return agg
+    n_vars = 1 if type(data) is list else data.shape[1]
+    df = DataFrame(data)
+    cols, names = list(), list()
+    # input sequence (t-n, ... t-1)
+    for i in range(n_in, 0, -1):
+        cols.append(df.shift(i))
+        names += [('var%d(t-%d)' % (j + 1, i)) for j in range(n_vars)]
+    # forecast sequence (t, t+1, ... t+n)
+    for i in range(0, n_out):
+        cols.append(df.shift(-i))
+        if i == 0:
+            names += [('var%d(t)' % (j + 1)) for j in range(n_vars)]
+        else:
+            names += [('var%d(t+%d)' % (j + 1, i)) for j in range(n_vars)]
+    # put it all together
+    agg = concat(cols, axis=1)
+    agg.columns = names
+    # drop rows with NaN values
+    if dropnan:
+        agg.dropna(inplace=True)
+    return agg
+
 
 if __name__ == "__main__":
-
     dataset = read_csv(dataset_path)
     # integer encode direction
     encoder = LabelEncoder()
@@ -56,12 +57,12 @@ if __name__ == "__main__":
     scaler = MinMaxScaler(feature_range=(0, 1))
     scaled = scaler.fit_transform(values)
     # frame as supervised learning
-    #reframed = series_to_supervised(scaled, 1, 1)
+    # reframed = series_to_supervised(scaled, 1, 1)
 
-    #values = reframed.values
+    # values = reframed.values
     values = scaled
-    train = values[:80*(len(values)/100), :]
-    test = values[80*(len(values)/100):, :]
+    train = values[:80 * (len(values) / 100), :]
+    test = values[80 * (len(values) / 100):, :]
     # split into input and outputs
     train_X, train_y = train[:, :-1], train[:, -1]
     test_X, test_y = test[:, :-1], test[:, -1]
@@ -75,9 +76,10 @@ if __name__ == "__main__":
     model.add(Dense(1))
     model.compile(loss='mean_squared_error', optimizer='adam')
     # fit network
-    history = model.fit(train_X, train_y, epochs=200, batch_size=72, validation_data=(test_X, test_y), verbose=2, shuffle=False)
+    history = model.fit(train_X, train_y, epochs=200, batch_size=72, validation_data=(test_X, test_y), verbose=2,
+                        shuffle=False)
     # plot history
-    pyplot.plot(history.history['loss'], label='train') 
+    pyplot.plot(history.history['loss'], label='train')
     pyplot.plot(history.history['val_loss'], label='test')
     pyplot.legend()
     pyplot.show()

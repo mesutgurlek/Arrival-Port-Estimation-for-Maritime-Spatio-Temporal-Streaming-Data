@@ -1,6 +1,6 @@
 from pandas import read_csv
 from datetime import datetime
-
+from matplotlib import pyplot
 
 # Load Dataset
 def parse(timestamp):
@@ -35,3 +35,18 @@ dataset.drop('SHIP_ID', axis=1, inplace=True)
 
 # save to file
 dataset.to_csv('../Dataset/preprocess_outputs/arrival_calc_processed.csv', index=False)
+
+values = dataset.values
+# specify columns to plot
+groups = [0, 1, 2, 3, 4, 5]
+i = 1
+# plot each column
+print('plot')
+pyplot.figure()
+for group in groups:
+    pyplot.subplot(len(groups), 1, i)
+    pyplot.plot(values[:, group])
+    pyplot.tight_layout(pad=0.1)
+    pyplot.title(dataset.columns[group], y=1.0, loc='right')
+    i += 1
+pyplot.show()
