@@ -30,7 +30,9 @@ ship_id = data[0][0]
 transaction_id = 1
 i = 0
 for entry in data:
-    if (entry[11] == ''):
+    if (entry[11] == ''): # drop missing rows for arrival port
+        continue
+    if (entry[6] == ''): # drop missing rows for heading
         continue
     if entry[8] != depart or entry[0] != ship_id: # if transaction changes
         transaction_id += 1
