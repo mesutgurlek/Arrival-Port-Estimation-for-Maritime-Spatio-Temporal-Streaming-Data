@@ -50,5 +50,6 @@ class Transaction_Reader():
         self.current_idx += next_idx
         return np.array(X), np.array(y)
         
-        
+    def hasnext_batch(self):
+        return self.current_batch < self.total_transactions
     
