@@ -1,6 +1,6 @@
 import csv
 
-filename = 'training_labeled.csv'
+filename = 'training_dataset.csv'
 
 data = []
 header = []
