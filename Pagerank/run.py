@@ -6,13 +6,8 @@ Created on Fri Apr 13 22:30:57 2018
 @author: melih
 """
 
-import sys
-import learn
-import predict
-    
+from Pagerank import learn, predict
 
-
-    
 if __name__ == "__main__":
     '''if len(sys.argv) != 3:
         print("Usage: python run.py <filename> <portsfile>")
