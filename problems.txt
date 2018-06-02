@@ -1,5 +1,0 @@
-- Ornekte time series data süreleri aynı intervallarda ilerliyor (1 ay 1 ay gidiyor).
-	Bizde kaç dakika arayla veri geldiği değişiyor.
-- zamanı ilk time'ı 0 olacak şekilde increasing koymak nasıl etkiler?
-- 503 transaction var, train - validation - test olarak ayırmak mantıklı
-- 
