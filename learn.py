@@ -14,9 +14,12 @@ class Learner():
     
     def __init__(self, training_filename, ports_filename):
         self.data = pd.read_csv(training_filename)
-        self.ports = self._read_ports(ports_filename)
+        self.port2index, self.index2port, self.ports = self._read_ports(ports_filename)
         self.trip_idxs = self._extract_trip_start_idxs(self.data.loc[:, 'SHIP_ID'])
         self.prob_mat = None
+        self.port_mat = None
+        self._generate_p2p_pagerank()
+        
 #        lons = np.array(data.loc[:, 'LON'])
 #        lats = np.array(data.loc[:, 'LAT'])
 #        deneme = np.array(data.loc[:, 'LON':'LAT'])
@@ -24,11 +27,18 @@ class Learner():
 #        self.world_map = None
     
     def _read_ports(self, filename):
+        '''
+        Returns port to index map, index to port map and port informations
+        '''
         data = pd.read_csv(filename)
         ports = {}
+        port2idx = {}
+        idx2port = []
         for index, port in data.iterrows():
+            idx2port.append(port['PORT_NAME'])
+            port2idx[port['PORT_NAME']] = index
             ports[port['PORT_NAME']] = port['LON':'RADIUS']
-        return ports
+        return port2idx, idx2port, ports
     
     def _extract_trip_start_idxs(self, ship_ids):
         curr_id = ship_ids[0]
@@ -70,16 +80,17 @@ class Learner():
         # generate probability matrix of port transitions
         norm_port_mat = port_mat / np.sum(port_mat, axis=1, keepdims=True)
         port_mat = (1 - teleport_rate) * norm_port_mat + teleport_rate / port_count
+        self.port_mat = port_mat
         # since probability of a ship going to its initial port should be zero,
         # distribute that probability to other ports
         for i in range(port_count):
             port_mat[i] += port_mat[i][i] / (port_count - 1)
             port_mat[i][i] = 0
         pagerank_mat = np.zeros((port_count, port_count), dtype='f')
-        print port_mat
+        # print port_mat
         # calculate pagerank probabilities iteratively using power method
         for i in range(port_count):
-            print(i)
+            # pagerank of going from current port to all other ports
             prob = np.zeros((1, port_count), dtype='f')
             prob[0][i] = 1
             diff = 100 # total difference between two iterations
